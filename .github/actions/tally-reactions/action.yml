@@ -40,7 +40,8 @@ runs:
             const likesCategory = categories.find(cat => cat.name === categoryName);
             
             if (!likesCategory) {
-              throw new Error(`Category "${categoryName}" not found. Available: ${categories.map(c => c.name).join(', ')}`);
+              console.log(`Category "${categoryName}" not found; continuing with an empty reaction tally.`);
+              return [];
             }
             
             const categoryId = likesCategory.id;
