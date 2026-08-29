@@ -6,7 +6,7 @@ on:
       - Docs  # Trigger on pushes to docs branch
   workflow_dispatch:  # Allow manual triggers
   workflow_run:
-    workflows: ["Generate All Samples and Cache Thumbnails"] 
+    workflows: ["Generate All Samples and Cache Thumbnails"]
     types: [completed]
 
 # Prevent multiple deployments from running at the same time
@@ -23,20 +23,22 @@ permissions:
 jobs:
   # Build job
   build:
+    # A workflow_run fires for failed generators too; only deploy successful output.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: Docs  # Checkout the docs branch
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs'  # Changed from '.' to './docs'
+          path: './docs'
 
   # Deployment job
   deploy:
